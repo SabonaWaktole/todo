@@ -1,0 +1,219 @@
+.header {
+    background-color: #333;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position:relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 20px;
+}
+
+.header-text {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 24px;
+}
+
+.theme-toggle-btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+
+/* Light Mode */
+body.light-mode {
+    background-color: #ffffff;
+    color: black;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #333333;
+}
+
+/* Optional: If you want to change the background of the header as well */
+.header.light-mode {
+    background-color: #f0f0f0;
+    color: black;
+}
+
+.header.dark-mode {
+    background-color: #222222;
+    color: white;
+}
+
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #555;
+    padding: 10px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 18px;
+}
+
+.navbar a:hover {
+    background-color: #777;
+    border-radius: 5px;
+}
+
+.container {
+    width: 300px;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #221f1f;
+    border-radius: 5px;
+    background: #f3f3f3;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+}
+
+.task {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status {
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.task.checked {
+    text-decoration: line-through; /* Strikes through the text */
+    color: grey; /* Optional: Makes the text grey to indicate it's completed */
+    order: 2; /* Moves the task to the bottom */
+}
+
+.task .task-checkbox:checked + .task-text {
+    text-decoration: line-through;
+    color: grey;
+    order: 2; /* Moves the task to the bottom */
+}
+
+
+.completed {
+    background: green;
+    color: white;
+}
+
+.task-input, .add-task-btn {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #d7c4c4;
+    border-radius: 5px;
+}
+
+.add-task-btn {
+    background: blue;
+    color: white;
+    cursor: pointer;
+}
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+
+.modal-content {
+    position: relative;
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+#newTaskInput {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#submitTaskBtn {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#submitTaskBtn:hover {
+    background-color: #45a049;
+}
+
+/* Style for the edit and delete buttons */
+.task-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.task-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.task-actions img {
+    width: 20px; /* Adjust image size */
+    height: 20px;
+}
+
+.task-actions button:hover img {
+    opacity: 0.8;
+}
+
+.task.checked {
+    text-decoration: line-through; /* Strikethrough for checked tasks */
+    opacity: 0.7; /* Optional: Reduce opacity for checked tasks */
+}
+

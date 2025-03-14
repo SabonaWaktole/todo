@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>app list</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+    <div class="header">
+        <span class="header-text">ToDo</span>
+        <button class="theme-toggle-btn">🌙</button>
+    </div>
+    
+    
+
+    <div class="navbar">
+        
+        
+        <input type="text" placeholder="Search Task..." name="search">
+        <select>
+            <option value="all">All Tasks</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+
+        </select>
+        
+    </div>
+    <div class="container">
+        <ul class="task-list">
+        </ul>
+        
+        <button class="add-task-btn">+ Add</button>
+        <!-- Modal Structure to add new task -->
+<div class="modal" id="taskModal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Enter New Task</h3>
+        <input type="text" id="newTaskInput" placeholder="Enter task here">
+        <button id="submitTaskBtn">Add Task</button>
+    </div>
+
+</div>
+        <!-- Modal Structure to edit task -->
+<!-- New "Edit Task" Modal -->
+<div class="modal" id="taskEditModal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Edit Task</h3>
+        <input type="text" id="editTaskInput" placeholder="Edit your task">
+        <button id="saveEditBtn">Save Changes</button>
+    </div>
+</div>
+
+    </div>
+    
+    
+    <!--/🌞-->
+    <script src="scripts/script.js"></script>
+</body>
+</html>
