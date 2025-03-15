@@ -21,7 +21,9 @@ const filterDropdown = document.querySelector('select');
 
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 let currentEditIndex = null;
-
+const escapeHtml = (input) => {
+    return input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+};
 const renderTasks = (tasksToRender = tasks) => {
     taskList.innerHTML = '';
 
@@ -35,12 +37,13 @@ const renderTasks = (tasksToRender = tasks) => {
     tasksToRender.forEach((task, index) => {
         const newTask = document.createElement('li');
         newTask.classList.add('task');
+        const escapedText = escapeHtml(task.text);
         if (task.checked) {
             newTask.classList.add('checked');
         }
         newTask.innerHTML = `
             <input type="checkbox" class="task-checkbox" ${task.checked ? 'checked' : ''}>
-            ${task.text}
+            ${escapedText}
             <span class="task-actions">
                 <button class="edit-btn">
                     <img src="../resources/editbutton.png" alt="Edit" />
