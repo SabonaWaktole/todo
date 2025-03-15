@@ -25,13 +25,14 @@ let currentEditIndex = null;
 const renderTasks = (tasksToRender = tasks) => {
     taskList.innerHTML = '';
 
-    const sortedTasks = tasksToRender.slice().sort((a, b) => {
-        if (a.checked && !b.checked) return 1;
-        if (!a.checked && b.checked) return -1;
-        return 0;
-    });
+    if (tasksToRender.length === 0) {
+        const noTasksMessage = document.createElement('p');
+        noTasksMessage.textContent = 'No tasks found.';
+        taskList.appendChild(noTasksMessage);
+        return;
+    }
 
-    sortedTasks.forEach((task, index) => {
+    tasksToRender.forEach((task, index) => {
         const newTask = document.createElement('li');
         newTask.classList.add('task');
         if (task.checked) {
@@ -59,12 +60,22 @@ const renderTasks = (tasksToRender = tasks) => {
         editButton.addEventListener('click', () => editTask(index));
         deleteButton.addEventListener('click', () => deleteTask(index));
     });
+    tasks = tasks;
+    localStorage.setItem('tasks', JSON.stringify(tasks));
 };
+
 
 const toggleTaskCompletion = (index) => {
     tasks[index].checked = !tasks[index].checked;
+    const sortedTasks = tasks.slice().sort((a, b) => {
+        if (a.checked && !b.checked) return 1;
+        if (!a.checked && b.checked) return -1;
+        return 0;
+    });
+    tasks = sortedTasks;
     localStorage.setItem('tasks', JSON.stringify(tasks));
     renderTasks();
+    console.log(tasks);
 };
 
 const editTask = (index) => {
@@ -90,11 +101,11 @@ closeBtns.forEach((btn) => {
         taskEditModal.style.display = 'none';
     });
 });
-
 submitTaskBtn.addEventListener('click', () => {
     const newTaskText = newTaskInput.value.trim();
     if (newTaskText !== '') {
-        tasks.push({ text: newTaskText, checked: false });
+        tasks.unshift({ text: newTaskText, checked: false });
+        
         localStorage.setItem('tasks', JSON.stringify(tasks));
         renderTasks();
         newTaskInput.value = '';
