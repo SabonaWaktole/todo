@@ -63,8 +63,10 @@ Local Storage: Persist tasks in the browser.
 
 How to run?
 
-1 clone the repository
+1. Clone the repository
 
     git clone https://github.com/SabonaWaktole/todo.git
+
+2. Open and run the downloaded file with your favorite Code editor
 
 
