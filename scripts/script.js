@@ -21,9 +21,11 @@ const filterDropdown = document.querySelector('select');
 
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 let currentEditIndex = null;
+
 const escapeHtml = (input) => {
     return input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 };
+
 const renderTasks = (tasksToRender = tasks) => {
     taskList.innerHTML = '';
 
@@ -59,14 +61,15 @@ const renderTasks = (tasksToRender = tasks) => {
         const editButton = newTask.querySelector('.edit-btn');
         const deleteButton = newTask.querySelector('.delete-btn');
 
-        checkbox.addEventListener('change', () => toggleTaskCompletion(index));
-        editButton.addEventListener('click', () => editTask(index));
-        deleteButton.addEventListener('click', () => deleteTask(index));
+        const originalIndex = task.originalIndex !== undefined ? task.originalIndex : index;
+        
+        checkbox.addEventListener('change', () => toggleTaskCompletion(originalIndex));
+        editButton.addEventListener('click', () => editTask(originalIndex));
+        deleteButton.addEventListener('click', () => deleteTask(originalIndex));
     });
-    tasks = tasks;
+
     localStorage.setItem('tasks', JSON.stringify(tasks));
 };
-
 
 const toggleTaskCompletion = (index) => {
     tasks[index].checked = !tasks[index].checked;
@@ -76,9 +79,7 @@ const toggleTaskCompletion = (index) => {
         return 0;
     });
     tasks = sortedTasks;
-    localStorage.setItem('tasks', JSON.stringify(tasks));
     renderTasks();
-    console.log(tasks);
 };
 
 const editTask = (index) => {
@@ -104,11 +105,11 @@ closeBtns.forEach((btn) => {
         taskEditModal.style.display = 'none';
     });
 });
+
 submitTaskBtn.addEventListener('click', () => {
     const newTaskText = newTaskInput.value.trim();
     if (newTaskText !== '') {
         tasks.unshift({ text: newTaskText, checked: false });
-        
         localStorage.setItem('tasks', JSON.stringify(tasks));
         renderTasks();
         newTaskInput.value = '';
@@ -138,18 +139,20 @@ window.addEventListener('click', (event) => {
 const searchInput = document.querySelector('input[name="search"]');
 searchInput.addEventListener('input', (event) => {
     const query = event.target.value.toLowerCase();
-    const filteredTasks = tasks.filter((task) => task.text.toLowerCase().includes(query));
+    const filteredTasks = tasks
+        .map((task, index) => ({ ...task, originalIndex: index }))
+        .filter((task) => task.text.toLowerCase().includes(query));
     renderTasks(filteredTasks);
 });
 
 filterDropdown.addEventListener('change', (event) => {
     const filterValue = event.target.value;
-    let filteredTasks = tasks;
+    let filteredTasks = tasks.map((task, index) => ({ ...task, originalIndex: index }));
 
     if (filterValue === 'pending') {
-        filteredTasks = tasks.filter((task) => !task.checked);
+        filteredTasks = filteredTasks.filter((task) => !task.checked);
     } else if (filterValue === 'completed') {
-        filteredTasks = tasks.filter((task) => task.checked);
+        filteredTasks = filteredTasks.filter((task) => task.checked);
     }
 
     renderTasks(filteredTasks);
