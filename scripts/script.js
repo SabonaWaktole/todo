@@ -18,6 +18,7 @@ const newTaskInput = document.getElementById('newTaskInput');
 const editTaskInput = document.getElementById('editTaskInput');
 const taskList = document.querySelector('.task-list');
 const filterDropdown = document.querySelector('select');
+const searchInput = document.querySelector('input[name="search"]');
 
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 let currentEditIndex = null;
@@ -26,7 +27,30 @@ const escapeHtml = (input) => {
     return input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 };
 
-const renderTasks = (tasksToRender = tasks) => {
+const getFilteredTasks = () => {
+    const filterValue = filterDropdown.value;
+    const searchQuery = searchInput.value.toLowerCase();
+    
+    let filteredTasks = tasks.map((task, index) => ({ ...task, originalIndex: index }));
+    
+    // Apply search filter
+    if (searchQuery) {
+        filteredTasks = filteredTasks.filter(task => 
+            task.text.toLowerCase().includes(searchQuery)
+        );
+    }
+    
+    // Apply status filter
+    if (filterValue === 'pending') {
+        filteredTasks = filteredTasks.filter(task => !task.checked);
+    } else if (filterValue === 'completed') {
+        filteredTasks = filteredTasks.filter(task => task.checked);
+    }
+    
+    return filteredTasks;
+};
+
+const renderTasks = (tasksToRender = getFilteredTasks()) => {
     taskList.innerHTML = '';
 
     if (tasksToRender.length === 0) {
@@ -36,7 +60,7 @@ const renderTasks = (tasksToRender = tasks) => {
         return;
     }
 
-    tasksToRender.forEach((task, index) => {
+    tasksToRender.forEach((task) => {
         const newTask = document.createElement('li');
         newTask.classList.add('task');
         const escapedText = escapeHtml(task.text);
@@ -60,12 +84,10 @@ const renderTasks = (tasksToRender = tasks) => {
         const checkbox = newTask.querySelector('.task-checkbox');
         const editButton = newTask.querySelector('.edit-btn');
         const deleteButton = newTask.querySelector('.delete-btn');
-
-        const originalIndex = task.originalIndex !== undefined ? task.originalIndex : index;
         
-        checkbox.addEventListener('change', () => toggleTaskCompletion(originalIndex));
-        editButton.addEventListener('click', () => editTask(originalIndex));
-        deleteButton.addEventListener('click', () => deleteTask(originalIndex));
+        checkbox.addEventListener('change', () => toggleTaskCompletion(task.originalIndex));
+        editButton.addEventListener('click', () => editTask(task.originalIndex));
+        deleteButton.addEventListener('click', () => deleteTask(task.originalIndex));
     });
 
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -73,12 +95,6 @@ const renderTasks = (tasksToRender = tasks) => {
 
 const toggleTaskCompletion = (index) => {
     tasks[index].checked = !tasks[index].checked;
-    const sortedTasks = tasks.slice().sort((a, b) => {
-        if (a.checked && !b.checked) return 1;
-        if (!a.checked && b.checked) return -1;
-        return 0;
-    });
-    tasks = sortedTasks;
     renderTasks();
 };
 
@@ -89,8 +105,11 @@ const editTask = (index) => {
 };
 
 const deleteTask = (index) => {
+    if(tasks.length === 1){
+        localStorage.removeItem('tasks');
+        
+    }
     tasks.splice(index, 1);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
     renderTasks();
 };
 
@@ -136,26 +155,13 @@ window.addEventListener('click', (event) => {
     }
 });
 
-const searchInput = document.querySelector('input[name="search"]');
-searchInput.addEventListener('input', (event) => {
-    const query = event.target.value.toLowerCase();
-    const filteredTasks = tasks
-        .map((task, index) => ({ ...task, originalIndex: index }))
-        .filter((task) => task.text.toLowerCase().includes(query));
-    renderTasks(filteredTasks);
+searchInput.addEventListener('input', () => {
+    renderTasks();
 });
 
-filterDropdown.addEventListener('change', (event) => {
-    const filterValue = event.target.value;
-    let filteredTasks = tasks.map((task, index) => ({ ...task, originalIndex: index }));
-
-    if (filterValue === 'pending') {
-        filteredTasks = filteredTasks.filter((task) => !task.checked);
-    } else if (filterValue === 'completed') {
-        filteredTasks = filteredTasks.filter((task) => task.checked);
-    }
-
-    renderTasks(filteredTasks);
+filterDropdown.addEventListener('change', () => {
+    renderTasks();
 });
 
+// Initial render
 renderTasks();
